@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Layout,Table ,Row,Col} from 'antd';
 import axios from "axios";
 const math=require("mathjs");
-const Spline = require('cubic-spline');
+const regression = require("regression");
 const { Header, Footer, Sider, Content,Card  } = Layout;
 const Arr=[];
 const Arr2=[];
@@ -10,6 +10,7 @@ const Arr3=[];
 var V1=[];
 var V2=[];
 var V3=[];
+var V4=[];
 var zz
 var xs
 var ys
@@ -20,7 +21,7 @@ let Mc
 var ex1
 var ex2
 var ex3
-function Spy()
+function Lre()
 {
     const[Ss,SSs]=useState('');
     const[Ab,Aa]=useState('');
@@ -51,15 +52,12 @@ function Spy()
             x++ 
         }
         x++
-        Aa(Arr)
         Aa2(Arr2)
         Aa3(Arr3)
-        Mm1("MatrixA")
-        Mm2("MatrixB")
-        Mm3("MatrixC")
-        Asw("Input index")
+        Mm1("X")
+        Mm3("Y")
         Bb(<input type="button" key={x}value="cal" onClick={Te}></input>)
-        II3(<input type="number" key={x+1} id={0}  id={0} ></input>)
+
     }
     function Se()
     {
@@ -85,10 +83,13 @@ function Spy()
         AAAns("")
     } 
     async function exa() {
-       let x=0
+        let x=0
+        Ma=0
+        Mb=0
+        var ex1=0,ex2=0,ex3=0,ex4=0,ex5=0
         let xx = await axios({
             method: "get",
-            url: "http://localhost:4000/sp",
+            url: "http://localhost:4000/lr",
           })
           .then((response) => {
             return response.data;
@@ -96,35 +97,39 @@ function Spy()
           .catch((err) => {
             return undefined;
           });
-          ex1=xx.Xi
+          ex1=xx.col
           ex2=xx.X
           ex3=xx.Y
+          ex4=xx.Xi
           console.log(ex1);
           console.log(ex2);
           console.log(ex3);
-          for(let i=0;i<ex1;i++)
+          console.log(ex4);
+          V1.length=0
+          for(let i=1;i<=ex1;i++)
           {
-            Arr2.push(<input type ="number"id={"b"+i}key={x} placeholder={"a"+i}  value={ex2[i]}style={{height: 50,width: 50,margin: '0 5px 5px 0'}}></input>)
-            Arr3.push(<input type ="number"id={"c"+i}key={x} placeholder={"b"+i} value={ex3[i]}style={{height: 50,width: 50,margin: '0 5px 5px 0'}}></input>)
-            Arr3.push(<br/>)
-            Arr2.push(<br/>)
-            x++ 
+              Arr2.push(<input type ="number"id={"b"+i}key={x} placeholder={"a"+i} value={ex2[i-1]} style={{height: 50,width: 50,margin: '0 5px 5px 0'}}></input>)
+              Arr3.push(<input type ="number"id={"c"+i}key={x} placeholder={"b"+i} value={ex3[i-1]} style={{height: 50,width: 50,margin: '0 5px 5px 0'}}></input>)
+              Arr3.push(<br/>)
+              Arr2.push(<br/>)
+              x++ 
+              V1.push([]);
+        V1[i-1][0]=ex2[i-1]
+        V1[i-1][1]=ex3[i-1]
           }
-          Mm1("MatrixA")
-        Mm2("MatrixB")
-        Mm3("MatrixC")
-        Asw("Input index")
           Aa2(Arr2)
-         Aa3(Arr3)
-         Bb(<input type="button" key={x}value="cear" onClick={Se}></input>)
-         II3(<input type="number" key={x+1} id={0}  id={0} value={ex1}></input>)
-         sp=0
-         sp=new Spline(ex2,ex3)
-         AAAns("Answer is = "+sp.at(ex1))  
-    }
+          Aa3(Arr3)
+          Mm1("X")
+          Mm3("Y")
+          Bb(<input type="button" key={x}value="cal" onClick={TT}></input>)
+          document.getElementById("xX").value=ex1
+          document.getElementById("xXx").value=ex4
+
+
+
+        }
     function Te()
     {
-    console.log("Tee");
       V2=[];
       V3=[];
         for (let i = 1; i <= Ss; i++) {
@@ -136,41 +141,42 @@ function Spy()
         V2[i-1]=document.getElementById("b"+i).value
         V3.push([]);
         V3[i-1]=document.getElementById("c"+i).value
+        V1.push([]);
+        V1[i-1][0]=document.getElementById("b"+i).value
+        V1[i-1][1]=document.getElementById("c"+i).value
         }
-         zz=document.getElementById(0).value
-       Mb=math.matrix(V2);
-       Mc=math.matrix(V3);
-       console.log(V2);
-       console.log(V3);
+        
         TT()
     }
     function TT()
     {
-        xs=0
-        ys=0
-        sp=0
-        xs=V2
-        ys=V3
-        console.log(xs);
-        console.log(ys);
-        sp=new Spline(xs,ys)
-        console.log(zz);
-        console.log(sp);
-        console.log(sp.at(zz));
-        AAAns("Answer is = "+sp.at(zz))
+        console.log(V1);
+        const result = regression.linear(V1);
+        let a0 = result.equation[1];
+        let a1 = result.equation[0];
+        var xxx=document.getElementById("xXx").value
+        //V4.push("a0 :" +a0)
+        V4[0] = (<h1>a0 : {a0}</h1>);
+        V4[1] = (<h1>a1 : {a1}</h1>);
+        V4[2] = (<h1>f({xxx})={a0}+{a1}({xxx})</h1>);
+        V4[3] = (<h1>f({xxx})={a0 + a1 * xxx}</h1>); 
+        console.log(V4);
+        AAAns(V4)
     }
    
 
     return(
         <div>
-            <div>Spine</div>
-            <input type="number" onChange={(e)=>{ SSs(e.target.value); Se();} }></input>
+            <div>Linear Re</div>
+            <input type="number" id="xX"onChange={(e)=>{ SSs(e.target.value); Se();} }></input>
             <br/>
-            <input type="button" onClick={inM} value="Create"></input>
-            <input type="button" onClick={exa} value="example"></input>
+            <div>Insert X</div>
+            <input type="number" id="xXx"></input>
             <br/>
-            <br/>
-            {As}
+            <Row>
+            <Col span={2}><br/><input type="button" onClick={inM} value="Create"></input></Col>
+            <Col span={2}><br/><input type="button" onClick={exa} value="Ex"></input></Col>
+            </Row> 
             <br/>
             {I3}
             <Row>
@@ -186,4 +192,4 @@ function Spy()
         </div>
     );
 }
-export default Spy;
+export default Lre;

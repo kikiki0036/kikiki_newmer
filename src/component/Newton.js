@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import functionPlot from "function-plot";
-import { Layout,Table } from 'antd';
+import { Layout,Table ,Row,Col} from 'antd';
+import axios from "axios";
 const math=require("mathjs");
 let width = 500;
 let height = 300;
@@ -58,6 +59,26 @@ function Newton()
         ntr(n)
         Setdp(<Table columns={colum} dataSource={arr}></Table>)
     }
+    async function exa() {
+      let x=0
+      var ex1=0,ex2=0,ex3=0
+      let xx = await axios({
+          method: "get",
+          url: "http://localhost:4000/Nr",
+        })
+        .then((response) => {
+          return response.data;
+        })
+        .catch((err) => {
+          return undefined;
+        });
+        ex1=xx.fx
+        ex2=xx.x0
+        document.getElementById("xL").value=ex1
+        document.getElementById("L").value=ex2
+        Setx(ex1)
+        Setn(ex2)
+    }
     function fx(b) {
         const node2 = math.parse(x)
         const code2 = node2.compile()
@@ -107,12 +128,16 @@ function Newton()
     }    
     return(
         <div>
-            <p>insert X</p>
-        <input type="text" onChange={(e)=>{Setx(e.target.value);At();}}></input>
+            <p>Newton</p>
+        <input type="text" id="xL" onChange={(e)=>{Setx(e.target.value);At();}}></input>
         <p>insert n</p>
-        <input type="number" onChange={(e)=>{Setn(e.target.value);At();}}></input>
+        <input type="number" id="L" onChange={(e)=>{Setn(e.target.value);At();}}></input>
         <br/>
-        <input type="button" onClick={sowv} value="kick me"></input>
+        <Row>
+               <Col span={2}><br/><input type="button" onClick={sowv} value="kick me"></input></Col>
+             <Col span={2}><br/><input type="button" onClick={exa} value="Ex"></input></Col>
+            </Row> 
+            
         <div id="tt" style={{position:'absolute',right:'600px',top:'90px'}}></div>
                 <br/>
                 <br/>

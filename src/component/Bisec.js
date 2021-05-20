@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import functionPlot from "function-plot";
-import { Layout,Table } from 'antd';
-const { Sider,Content} = Layout;                                                                                                                    
+import { Layout,Table ,Row,Col} from 'antd';
+import axios from "axios";
+const { Header, Footer, Sider, Content } = Layout;                                                                                                           
 const math=require("mathjs");
 const parser = math.parser()
 let width = 500;
@@ -13,13 +14,16 @@ let fxL=0
 let fxR=0
 let i=0
 let z=''
+var fxx
+var fxxl
+var fxxr
 const arr = [{
   key:0,
      iteretion:0,
      xl:0,
      xr:0,
-     fxl:0,
-     fxr:0,
+     xm:0,
+     fxm:0,
      error:0
     }];
 const colum=[
@@ -39,14 +43,14 @@ const colum=[
     key: 'xr',
   },
   {
-    title: 'fxl',
-    dataIndex: 'fxl',
-    key: 'fxl',
+    title: 'xm',
+    dataIndex: 'xm',
+    key: 'xm',
   },
   {
-    title: 'fxr',
-    dataIndex: 'fxr',
-    key: 'fxr',
+    title: 'fxm',
+    dataIndex: 'fxm',
+    key: 'fxm',
   },{
     title: 'error',
     dataIndex: 'error',
@@ -61,6 +65,8 @@ function Bisec ()
     const[l,Setl]=useState('');
     const[r,Setr]=useState('');
     const[t,Sett]=useState('');
+    const[Bc,Bcl]=useState('');
+    const[G,Gg]=useState('');
 function fx(b) {
         const node2 = math.parse(x)
         const code2 = node2.compile()
@@ -69,6 +75,30 @@ function fx(b) {
         }
             return  code2.evaluate(scope)
           }
+          async function exa() {
+            let x=0
+            var ex1=0,ex2=0,ex3=0
+            let xx = await axios({
+                method: "get",
+                url: "http://localhost:4000/Bisection",
+              })
+              .then((response) => {
+                return response.data;
+              })
+              .catch((err) => {
+                return undefined;
+              });
+              ex1=xx.fx
+              ex2=xx.xL
+              ex3=xx.xR
+              document.getElementById("xL").value=ex1
+              document.getElementById("L").value=ex2
+              document.getElementById("R").value=ex3
+              Setx(ex1)
+              Setl(ex2)
+              Setr(ex3)
+           
+        }
     function Bii(xl, xr, eo,i,c) {
          //       console.log(i)
      //       console.log("xl "+xl)
@@ -88,8 +118,8 @@ function fx(b) {
                         itere:i,
                         xl:xl,
                         xr:xr,
-                        fxl:fxl,
-                        fxr:fxr,
+                        xm:xm,
+                        fxm:fxm,
                         error:checkerk
                     })
                 i++
@@ -105,25 +135,29 @@ function fx(b) {
         } 
         function At()
         {
-          Sett('')          
+          Sett("")          
+          Bcl(0)
+          
+            
         }
         function Chz(e)
         {
             arr.length=0
             Sett(' ')
             functionPlot({
-                target: "#tes2",
-                width,
-                height,
-                yAxis: { domain: [0, 23]},
-                grid: true,
-                data: [
-                  {
-                    fn:x,
-                  }
-                ]
-              }
-              );
+              target: "#tes2",
+              width,
+              height,
+              yAxis: { domain: [0, 23]},
+              grid: true,
+              data: [
+                {
+                  fn:x,
+                }
+              ]
+            }
+            )
+            
               Bii(l,r,0,1)
               Sett(<Table columns={colum} dataSource={arr}></Table>)
             }
@@ -131,13 +165,15 @@ function fx(b) {
             <div>
                 <form>
                 <p>insert fx</p>
-                <input type="text" onChange={(e)=>{Setx(e.target.value); At(); }}></input>
+                <input type="text" id="xL" onChange={(e)=>{Setx(e.target.value); At(); }}></input>
                 <p>insert  left</p>
-                <input type="number" onChange={(e)=>{Setl(e.target.value);At();}}></input> 
+                <input type="number" id="L" onChange={(e)=>{Setl(e.target.value);At();}}></input> 
                 <p>insert  right</p>
-                <input type="number" onChange={(e)=>{Setr(e.target.value);At();}}></input>
-                <br/>
-                <input type="button" value="cal" onClick={Chz}></input>
+                <input type="number" id="R" onChange={(e)=>{Setr(e.target.value);At();}}></input>
+                <Row>
+               <Col span={2}><br/><input type="button" value="cal" onClick={Chz}></input></Col>
+             <Col span={2}><br/><input type="button" onClick={exa} value="Ex"></input></Col>
+            </Row> 
                 </form>
                 <div id="tes2" style={{position:'absolute',right:'600px',top:'90px'}}></div>
                 <br/>

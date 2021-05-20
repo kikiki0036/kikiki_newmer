@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import functionPlot from "function-plot";
-import { Layout,Table } from 'antd';
+import { Layout,Table ,Row,Col} from 'antd';
+import axios from "axios";
 const math=require("mathjs");
 const { Header, Footer, Sider, Content } = Layout;
 let width = 500;
@@ -74,6 +75,30 @@ function Secan()
         }
             return  code2.evaluate(scope)
           }
+          async function exa() {
+            let x=0
+            var ex1=0,ex2=0,ex3=0
+            let xx = await axios({
+                method: "get",
+                url: "http://localhost:4000/Secant",
+              })
+              .then((response) => {
+                return response.data;
+              })
+              .catch((err) => {
+                return undefined;
+              });
+              ex1=xx.fx
+              ex2=xx.x0
+              ex3=xx.x1
+              document.getElementById("xL").value=ex1
+              document.getElementById("L").value=ex2
+              document.getElementById("R").value=ex3
+              Setx(ex1)
+              Setn(ex2)
+              Setn2(ex3)
+          }
+          
           function At()
         {
           Setp('')          
@@ -110,13 +135,17 @@ function Secan()
     return(
         <div>
             <p>insert fx</p>
-                <input type="text" onChange={(e)=>{Setx(e.target.value);At()}}></input>
+                <input type="text" id="xL" onChange={(e)=>{Setx(e.target.value);At()}}></input>
                 <p>insert  n1</p>
-                <input type="number" onChange={(e)=>{Setn(e.target.value);At();}}></input> 
+                <input type="number" id="L" onChange={(e)=>{Setn(e.target.value);At();}}></input> 
                 <p>insert  n2</p>
-                <input type="number" onChange={(e)=>{Setn2(e.target.value);At();}}></input>
+                <input type="number" id="R" onChange={(e)=>{Setn2(e.target.value);At();}}></input>
                 <br/>
-                <input type="button" value="cal" onClick={so}></input>
+                <Row>
+               <Col span={2}><br/><input type="button" value="cal" onClick={so}></input></Col>
+             <Col span={2}><br/><input type="button" onClick={exa} value="Ex"></input></Col>
+            </Row> 
+            
                 <div id="tt" style={{position:'absolute',right:'600px',top:'90px'}}></div>
                 <br/>
                 <br/>

@@ -24,7 +24,7 @@ const options = {
     },
     servers: [
       {
-        url: "http://localhost:8080",
+        url: "http://localhost:4000",
       },
     ],
   },
@@ -83,6 +83,6 @@ app.get("/:id", (req, res) => {
  // }
 });
 
-app.listen(8080, () => {
+app.listen(4000, () => {
   console.log("start server");
 });

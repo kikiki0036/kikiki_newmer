@@ -15,7 +15,11 @@ import Choles from './component/Choles'
 import Jacobi from './component/Jacobi.js'
 import Gsei from './component/Gsei.js'
 import Coc from './component/Coc.js'
+import Newtondivi from './component/Newtondivi.js'
+import Larg from './component/Larg.js'
 import Spy from './component/Spy.js'
+import Lre from './component/Lre.js'
+import Lpoly from './component/Lpoly.js'
 const { SubMenu } = Menu;
 let p2="Newmer"
 const { Header, Content, Footer, Sider } = Layout;
@@ -41,6 +45,10 @@ class App extends React.Component {
 render()
 {
   console.log(this.state.S);
+  if(this.state.S.key==0)
+  {
+    p2=<div>Wellcum to new mer</div>
+  }
   if(this.state.S.key==1)
   {
     p2=<Bisec />
@@ -55,15 +63,17 @@ render()
   }
   if(this.state.S.key==4)
   {
-    p2=<Newton/>
+    p2=<Taylor/>
   }
   if(this.state.S.key==5)
   {
-    p2=<Secan/>
+    
+    p2=<Newton/>
   }
   if(this.state.S.key==6)
   {
-    p2=<Taylor/>
+   
+    p2=<Secan/>
   }
   if(this.state.S.key==7)
   {
@@ -95,8 +105,27 @@ render()
   }
   if(this.state.S.key==14)
   {
+    p2=<Newtondivi/>
+  }
+  if(this.state.S.key==15)
+  {
+    p2=<Larg/>
+  }
+  if(this.state.S.key==16)
+  {
     p2=<Spy/>
   }
+  if(this.state.S.key==17)
+  {
+    p2=<Lre/>
+  }
+  if(this.state.S.key==18)
+  {
+    p2=<Lpoly/>
+  }
+
+
+
 
   return(
     
@@ -104,7 +133,7 @@ render()
     <Header className="header">
       <div className="logo" />
       <Menu theme="dark" mode="horizontal" >
-        <Menu.Item key="1">Nemer</Menu.Item>
+        <Menu.Item key="0" onClick={this.Ss}>Nemer</Menu.Item>
       </Menu>
     </Header>
     <Content style={{ padding: '0 50px' }}>
@@ -118,7 +147,7 @@ render()
               <Menu.Item  key="1" onClick={this.Ss}>Bisexual</Menu.Item>
               <Menu.Item  key="2"onClick={this.Ss}>Falseposition</Menu.Item>
               <Menu.Item  key="3"onClick={this.Ss}>One-point</Menu.Item>
-              <Menu.Item  key="4"onClick={this.Ss}>Taylor swiff</Menu.Item>
+              {/* <Menu.Item  key="4"onClick={this.Ss}>Taylor swiff</Menu.Item> */}
               <Menu.Item  key="5"onClick={this.Ss}>Issac newton</Menu.Item>
               <Menu.Item  key="6"onClick={this.Ss}>See can't</Menu.Item>
             </SubMenu>
@@ -132,10 +161,13 @@ render()
               <Menu.Item key="13" onClick={this.Ss} >Conjugate</Menu.Item>
             </SubMenu>
             <SubMenu key="sub3"  title="Interpolation">
-              <Menu.Item key="9">option9</Menu.Item>
-              <Menu.Item key="10">option10</Menu.Item>
-              <Menu.Item key="11">option11</Menu.Item>
-              <Menu.Item key="14" onClick={this.Ss}>Spy</Menu.Item>
+              <Menu.Item key="14" onClick={this.Ss}>Newton Divi</Menu.Item>
+              <Menu.Item key="15" onClick={this.Ss}>L gong</Menu.Item>
+              <Menu.Item key="16" onClick={this.Ss}>Spy</Menu.Item>
+            </SubMenu>
+            <SubMenu key="sub4"  title="Regression">
+              <Menu.Item key="17" onClick={this.Ss}>Linear</Menu.Item>
+              <Menu.Item key="18" onClick={this.Ss}>Poly</Menu.Item>
             </SubMenu>
           </Menu>
         </Sider>
